@@ -43,8 +43,8 @@ exports.resizeImage = void 0;
 var sharp_1 = __importDefault(require("sharp"));
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
-var IMAGES_DIRECTORY = path_1.default.join(__dirname, '..', 'images');
-var RESIZED_IMAGES_DIRECTORY = path_1.default.join(__dirname, '..', 'resized');
+var IMAGES_DIRECTORY = path_1.default.join(__dirname, '../../Asset/images');
+var RESIZED_IMAGES_DIRECTORY = path_1.default.join(__dirname, '../../Asset/resized');
 if (!fs_1.default.existsSync(RESIZED_IMAGES_DIRECTORY)) {
     fs_1.default.mkdirSync(RESIZED_IMAGES_DIRECTORY);
 }
@@ -54,10 +54,16 @@ var resizeImage = function (req, res) { return __awaiter(void 0, void 0, void 0,
         switch (_b.label) {
             case 0:
                 _a = req.query, width = _a.width, height = _a.height, imageName = _a.imageName;
+                if (!width || !height || !imageName) {
+                    res
+                        .status(400)
+                        .send('Missing required query parameters: width, height, imageName');
+                    return [2 /*return*/];
+                }
                 widthInt = parseInt(width);
                 heightInt = parseInt(height);
-                if (!widthInt || !heightInt || !imageName) {
-                    res.status(400).send('Missing required query parameters: width, height, imageName');
+                if (isNaN(widthInt) || widthInt <= 0 || isNaN(heightInt) || heightInt <= 0) {
+                    res.status(400).send('Width and height must be positive integers');
                     return [2 /*return*/];
                 }
                 _b.label = 1;

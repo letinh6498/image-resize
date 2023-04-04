@@ -81,3 +81,20 @@ describe('check An error occurred while resizing the image', () => {
     expect(response.text).toBe('An error occurred while resizing the image.');
   });
 });
+
+describe('check query', () => {
+  let response: request.Response;
+  const imageName = 'image.png';
+  const width = 'a';
+  const height = 100;
+
+  beforeEach(async () => {
+    response = await request(app).get(
+      `/image?imageName=${imageName}&width=${width}&height=${height}`,
+    );
+  });
+  it('should return a status code of 400 if Width and height not valid', async () => {
+    expect(response.status).toBe(400);
+    expect(response.text).toBe('Width and height must be positive integers');
+  });
+});

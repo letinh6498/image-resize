@@ -153,3 +153,26 @@ describe('check An error occurred while resizing the image', function () {
         });
     }); });
 });
+describe('check query', function () {
+    var response;
+    var imageName = 'image.png';
+    var width = 'a';
+    var height = 100;
+    beforeEach(function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, supertest_1.default)(index_1.app).get("/image?imageName=".concat(imageName, "&width=").concat(width, "&height=").concat(height))];
+                case 1:
+                    response = _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should return a status code of 400 if Width and height not valid', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            expect(response.status).toBe(400);
+            expect(response.text).toBe('Width and height must be positive integers');
+            return [2 /*return*/];
+        });
+    }); });
+});

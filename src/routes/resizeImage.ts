@@ -3,8 +3,8 @@ import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs';
 
-const IMAGES_DIRECTORY = path.join(__dirname, '..', 'images');
-const RESIZED_IMAGES_DIRECTORY = path.join(__dirname, '..', 'resized');
+const IMAGES_DIRECTORY = path.join(__dirname, '../../Asset/images');
+const RESIZED_IMAGES_DIRECTORY = path.join(__dirname, '../../Asset/resized');
 
 if (!fs.existsSync(RESIZED_IMAGES_DIRECTORY)) {
   fs.mkdirSync(RESIZED_IMAGES_DIRECTORY);
@@ -12,13 +12,19 @@ if (!fs.existsSync(RESIZED_IMAGES_DIRECTORY)) {
 
 export const resizeImage = async (req: Request, res: Response) => {
   const { width, height, imageName } = req.query;
-  const widthInt = parseInt(width as string);
-  const heightInt = parseInt(height as string);
 
-  if (!widthInt || !heightInt || !imageName) {
+  if (!width || !height || !imageName) {
     res
       .status(400)
       .send('Missing required query parameters: width, height, imageName');
+    return;
+  }
+
+  const widthInt = parseInt(width as string);
+  const heightInt = parseInt(height as string);
+
+  if (isNaN(widthInt) || widthInt <= 0 || isNaN(heightInt) || heightInt <= 0) {
+    res.status(400).send('Width and height must be positive integers');
     return;
   }
 
